@@ -1,6 +1,6 @@
 {
   "name": "cypress-log-to-output",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Sends all browser console logs to stdout while running your Cypress tests.",
   "main": "src/log-to-output.js",
   "files": [
@@ -17,6 +17,7 @@
     "cypress": "^3.2.0"
   },
   "scripts": {
-    "cypress:open": "cypress open --project ."
+    "cypress:open": "cypress open --project .",
+    "cypress:run": "cypress run --project ."
   }
 }

@@ -86,8 +86,8 @@ function install(on, filter) {
 }
 
 function browserLaunchHandler(browser = {}, args) {
-  if (!['chrome', 'electron'].includes(browser.family)) {
-    return log(`Warning: An unrecognized browser family was used, output will not be logged to console: ${browser.family}`)
+  if (!['chrome'].includes(browser.family)) {
+    return log(` [cypress-log-to-output] Warning: An unsupported browser family was used, output will not be logged to console: ${browser.family}`)
   }
 
   const rdp = 40000 + Math.round(Math.random() * 25000)
@@ -96,16 +96,14 @@ function browserLaunchHandler(browser = {}, args) {
     args.push(`--remote-debugging-port=${rdp}`)
   }
 
-  if (browser.family === 'electron') {
-    args.additionalArguments = [`--remote-debugging-port=${rdp}`]
-  }
+  log(' [cypress-log-to-output] Attempting to connect to Chrome Debugging Protocol')
 
   const tryConnect = () => {
     new CDP({
       port: rdp
     })
     .then((cdp) => {
-      log('Connected to Chrome Debugging Protocol')
+      log(' [cypress-log-to-output] Connected to Chrome Debugging Protocol')
 
       /** captures logs from the browser */
       cdp.Log.enable()
@@ -116,7 +114,7 @@ function browserLaunchHandler(browser = {}, args) {
       cdp.Runtime.consoleAPICalled(logConsole)
 
       cdp.on('disconnect', () => {
-        log('cdp dced')
+        log(' [cypress-log-to-output] Chrome Debugging Protocol disconnected')
       })
     })
     .catch(() => {

@@ -22,7 +22,9 @@ module.exports = (on, config) => {
 
 You'll now see all browser logs in your console output.
 
-Works in Chrome and Electron browsers.
+Works in Chrome browser in run and in open mode.
+
+**Electron is not currently supported.** I can't find a way to attach the Chrome Debugging Protocol to the Electron browser spawned by Cypress.
 
 ## Filtering Events
 
