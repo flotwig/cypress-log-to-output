@@ -1,6 +1,8 @@
 const CDP = require('chrome-remote-interface')
 const chalk = require('chalk')
 
+let eventFilter
+
 const severityColors = {
   'verbose': (a) => a,
   'info': chalk.blue,
@@ -20,6 +22,10 @@ function log(msg) {
 }
 
 function logEntry(params) {
+  if (eventFilter && !eventFilter('browser', params.entry)) {
+    return
+  }
+
   const { level, source, text, timestamp, url, lineNumber, stackTrace, args } = params.entry
   const color = severityColors[level]
   const icon = severityIcons[level]
@@ -50,6 +56,10 @@ function logEntry(params) {
 }
 
 function logConsole(params) {
+  if (eventFilter && !eventFilter('console', params)) {
+    return
+  }
+
   const { type, args, timestamp } = params
   const level = type === 'error' ? 'error' : 'verbose'
   const color = severityColors[level]
@@ -70,7 +80,8 @@ function logConsole(params) {
   }
 }
 
-function install(on) {
+function install(on, filter) {
+  eventFilter = filter
   on('before:browser:launch', browserLaunchHandler)
 }
 

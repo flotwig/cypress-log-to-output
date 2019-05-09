@@ -1,8 +1,11 @@
 {
   "name": "cypress-log-to-output",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Sends all browser console logs to stdout while running your Cypress tests.",
   "main": "src/log-to-output.js",
+  "files": [
+    "src"
+  ],
   "repository": "https://github.com/flotwig/cypress-log-to-output",
   "author": "Zach Bloomquist <zach@cypress.io>",
   "license": "MIT",
