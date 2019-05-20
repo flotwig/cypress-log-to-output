@@ -1,7 +1,7 @@
 cypress-log-to-output
 ===
 
-This is a [Cypress](https://github.com/cypress-io/cypress) plugin that sends all logs that occur in the browser to stdout in the terminal. This means that you can see any kind of error that occurs in the browser, even if your test is running headlessly.
+This is a [Cypress](https://github.com/cypress-io/cypress) plugin that sends all console logs that occur in the browser to stdout in the terminal. This means that you can see any kind of `console.log`, `console.info` or `console.error` that occurs in the browser, even if your tests are running in the terminal.
 
 # Installation
 
@@ -20,9 +20,15 @@ module.exports = (on, config) => {
 }
 ```
 
-You'll now see all browser logs in your console output.
+You'll now see all browser console logs in your terminal output. 
 
-Works in Chrome browser in run and in open mode.
+```shell
+cypress run --browser=chrome
+```
+
+<img width="1526" alt="Screen Shot 2019-05-20 at 3 01 12 PM" src="https://user-images.githubusercontent.com/1271364/58007393-35928a00-7b10-11e9-9822-b4c40e63d33f.png">
+
+Works in Chrome, Chromium, or Canary browsers during `cypress run` and `cypress open`.
 
 **Electron is not currently supported.** I can't find a way to attach the Chrome Debugging Protocol to the Electron browser spawned by Cypress.
 
