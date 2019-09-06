@@ -86,13 +86,14 @@ function install(on, filter) {
 }
 
 function browserLaunchHandler(browser = {}, args) {
-  if (!['chrome'].includes(browser.family)) {
+  const isChrome = ['chrome'].includes(browser.family) || browser.name === 'chrome'
+  if (!isChrome) {
     return log(` [cypress-log-to-output] Warning: An unsupported browser family was used, output will not be logged to console: ${browser.family}`)
   }
 
   const rdp = 40000 + Math.round(Math.random() * 25000)
 
-  if (browser.family === 'chrome') {
+  if (isChrome) {
     args.push(`--remote-debugging-port=${rdp}`)
   }
 
