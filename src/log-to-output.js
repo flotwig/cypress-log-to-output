@@ -85,16 +85,18 @@ function install(on, filter) {
   on('before:browser:launch', browserLaunchHandler)
 }
 
+function isChrome(browser) {
+  return browser.family === 'chrome' || ['chrome', 'chromium', 'canary'].includes(browser.name)
+}
+
 function browserLaunchHandler(browser = {}, args) {
-  if (!['chrome'].includes(browser.family)) {
+  if (!isChrome(browser)) {
     return log(` [cypress-log-to-output] Warning: An unsupported browser family was used, output will not be logged to console: ${browser.family}`)
   }
 
   const rdp = 40000 + Math.round(Math.random() * 25000)
 
-  if (browser.family === 'chrome') {
-    args.push(`--remote-debugging-port=${rdp}`)
-  }
+  args.push(`--remote-debugging-port=${rdp}`)
 
   log(' [cypress-log-to-output] Attempting to connect to Chrome Debugging Protocol')
 
