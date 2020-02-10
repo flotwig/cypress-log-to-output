@@ -20,7 +20,7 @@ module.exports = (on, config) => {
 }
 ```
 
-You'll now see all browser console logs in your terminal output. 
+You'll now see all browser console logs in your terminal output.
 
 ```shell
 cypress run --browser=chrome
@@ -57,3 +57,7 @@ module.exports = (on, config) => {
   })
 }
 ```
+
+## Disabling debug info
+
+You can remove the lines beginning with `[cypress-log-to-output]` by passing `-cypress-log-to-output` in the `DEBUG` environment variable.
