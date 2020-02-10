@@ -103,7 +103,9 @@ function ensureRdpPort(args) {
   return port
 }
 
-function browserLaunchHandler(browser = {}, args) {
+function browserLaunchHandler(browser = {}, launchOptions) {
+  const args = launchOptions.args || launchOptions
+
   if (!isChrome(browser)) {
     return log(` [cypress-log-to-output] Warning: An unsupported browser family was used, output will not be logged to console: ${browser.family}`)
   }
@@ -138,7 +140,7 @@ function browserLaunchHandler(browser = {}, args) {
 
   tryConnect()
 
-  return args
+  return launchOptions
 }
 
 module.exports = {
