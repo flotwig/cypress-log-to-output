@@ -1,6 +1,6 @@
 {
   "name": "cypress-log-to-output",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Sends all browser console logs to stdout while running your Cypress tests.",
   "main": "src/log-to-output.js",
   "files": [
