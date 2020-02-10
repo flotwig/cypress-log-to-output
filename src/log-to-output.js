@@ -17,6 +17,15 @@ const severityIcons = {
   'error': '⚠',
 }
 
+function debugLog(msg) {
+  // suppress with DEBUG=-cypress-log-to-output
+  if (process.env.DEBUG && process.env.DEBUG.includes('-cypress-log-to-output')) {
+    return
+  }
+
+  log(`[cypress-log-to-output] ${msg}`)
+}
+
 function log(msg) {
   console.log(msg)
 }
@@ -107,19 +116,19 @@ function browserLaunchHandler(browser = {}, launchOptions) {
   const args = launchOptions.args || launchOptions
 
   if (!isChrome(browser)) {
-    return log(` [cypress-log-to-output] Warning: An unsupported browser family was used, output will not be logged to console: ${browser.family}`)
+    return debugLog(`Warning: An unsupported browser family was used, output will not be logged to console: ${browser.family}`)
   }
 
   const rdp = ensureRdpPort(args)
 
-  log(' [cypress-log-to-output] Attempting to connect to Chrome Debugging Protocol')
+  debugLog('Attempting to connect to Chrome Debugging Protocol')
 
   const tryConnect = () => {
     new CDP({
       port: rdp
     })
     .then((cdp) => {
-      log(' [cypress-log-to-output] Connected to Chrome Debugging Protocol')
+      debugLog('Connected to Chrome Debugging Protocol')
 
       /** captures logs from the browser */
       cdp.Log.enable()
@@ -130,7 +139,7 @@ function browserLaunchHandler(browser = {}, launchOptions) {
       cdp.Runtime.consoleAPICalled(logConsole)
 
       cdp.on('disconnect', () => {
-        log(' [cypress-log-to-output] Chrome Debugging Protocol disconnected')
+        debugLog('Chrome Debugging Protocol disconnected')
       })
     })
     .catch(() => {
