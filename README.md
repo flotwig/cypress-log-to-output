@@ -62,7 +62,7 @@ module.exports = (on, config) => {
 
 ## Recording Logs
 
-If you want to record the logs internally, you can use the `recordLog` option:
+If you want to record the logs internally, you can use the `recordLogs` option:
 
 ```js
 module.exports = (on, config) => {
