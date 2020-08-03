@@ -2,6 +2,9 @@ const CDP = require('chrome-remote-interface')
 const chalk = require('chalk')
 
 let eventFilter
+let recordLogs
+
+let messageLog = [];
 
 const severityColors = {
   'verbose': (a) => a,
@@ -42,11 +45,15 @@ function logEntry(params) {
   const prefix = `[${new Date(timestamp).toISOString()}] ${icon} `
   const prefixSpacer = ' '.repeat(prefix.length)
 
-  log(color(`${prefix}${chalk.bold(level)} (${source}): ${text}`))
+  let logMessage = `${prefix}${chalk.bold(level)} (${source}): ${text}`;
+  log(color(logMessage));
+  recordLogMessage(logMessage);
 
   const logAdditional = (msg) => {
-    log(color(`${prefixSpacer}${msg}`))
-  }
+    let additionalLogMessage = `${prefixSpacer}${msg}`;
+    log(color(additionalLogMessage));
+    recordLogMessage(additionalLogMessage);
+  };
 
   if (url) {
     logAdditional(`${chalk.bold('URL')}: ${url}`)
@@ -77,11 +84,15 @@ function logConsole(params) {
   const prefix = `[${new Date(timestamp).toISOString()}] ${icon} `
   const prefixSpacer = ' '.repeat(prefix.length)
 
-  log(color(`${prefix}${chalk.bold(`console.${type}`)} called`))
+  let logMessage = `${prefix}${chalk.bold(`console.${type}`)} called`;
+  log(color(logMessage));
+  recordLogMessage(logMessage);
 
   const logAdditional = (msg) => {
-    log(color(`${prefixSpacer}${msg}`))
-  }
+    let logMessage = `${prefixSpacer}${msg}`;
+    log(color(logMessage));
+    recordLogMessage(logMessage);
+  };
 
   if (args) {
     logAdditional(`Arguments:`)
@@ -89,9 +100,24 @@ function logConsole(params) {
   }
 }
 
-function install(on, filter) {
-  eventFilter = filter
+function install(on, filter, options) {
+  eventFilter = filter;
+  recordLogs = options.recordLogs;
   on('before:browser:launch', browserLaunchHandler)
+}
+
+function recordLogMessage(logMessage) {
+  if (recordLogs) {
+    messageLog.push(logMessage);
+  }
+}
+
+function getLogs() {
+  return messageLog;
+}
+
+function clearLogs() {
+  messageLog = [];
 }
 
 function isChrome(browser) {
@@ -155,5 +181,7 @@ function browserLaunchHandler(browser = {}, launchOptions) {
 module.exports = {
   _ensureRdpPort: ensureRdpPort,
   install,
-  browserLaunchHandler
+  browserLaunchHandler,
+  getLogs,
+  clearLogs
 }
