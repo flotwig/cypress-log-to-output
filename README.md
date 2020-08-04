@@ -60,21 +60,6 @@ module.exports = (on, config) => {
 }
 ```
 
-## Recording Logs
-
-If you want to record the logs internally, you can use the `recordLogs` option:
-
-```js
-module.exports = (on, config) => {
-  /** the rest of your plugins... **/
-  const options = { recordLogs: true };
-  require('cypress-log-to-output').install(on, filterCallback, options)
-}
-```
-
-The logs will be stored in an internal buffer. They can be accessed using the `getLogs` exported function. 
-The buffer can be cleared using the `clearLogs` exported function.
-
 ## Disabling debug info
 
 You can remove the lines beginning with `[cypress-log-to-output]` by passing `-cypress-log-to-output` in the `DEBUG` environment variable.
