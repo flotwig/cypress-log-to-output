@@ -100,7 +100,7 @@ function logConsole(params) {
   }
 }
 
-function install(on, filter, options) {
+function install(on, filter, options = {}) {
   eventFilter = filter;
   recordLogs = options.recordLogs;
   on('before:browser:launch', browserLaunchHandler)
