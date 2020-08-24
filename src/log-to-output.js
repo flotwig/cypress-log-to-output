@@ -121,7 +121,7 @@ function clearLogs() {
 }
 
 function isChrome(browser) {
-  return browser.family === 'chrome' || ['chrome', 'chromium', 'canary'].includes(browser.name)
+  return browser.family === 'chrome' || ['chrome', 'chromium', 'canary'].includes(browser.name) || (browser.family === 'chromium' && browser.name !== 'electron')
 }
 
 function ensureRdpPort(args) {
