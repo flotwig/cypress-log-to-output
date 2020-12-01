@@ -3,6 +3,7 @@ const chalk = require('chalk')
 
 let eventFilter
 let recordLogs
+let suppressConsoleLog
 
 let messageLog = [];
 
@@ -30,6 +31,9 @@ function debugLog(msg) {
 }
 
 function log(msg) {
+  if(suppressConsoleLog){
+    return;
+  }
   console.log(msg)
 }
 
@@ -103,6 +107,7 @@ function logConsole(params) {
 function install(on, filter, options = {}) {
   eventFilter = filter;
   recordLogs = options.recordLogs;
+  suppressConsoleLog = options.suppressConsoleLog || true;
   on('before:browser:launch', browserLaunchHandler)
 }
 
