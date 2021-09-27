@@ -2,6 +2,7 @@ const CDP = require('chrome-remote-interface')
 const chalk = require('chalk')
 
 let eventFilter
+let logToOutput
 let recordLogs
 
 let messageLog = [];
@@ -26,11 +27,14 @@ function debugLog(msg) {
     return
   }
 
-  log(`[cypress-log-to-output] ${msg}`)
+  // debug messages should be logged even if logToOutput is false
+  log(`[cypress-log-to-output] ${msg}`, true)
 }
 
-function log(msg) {
-  console.log(msg)
+function log(msg, forceDebug = false) {
+  if (logToOutput || forceDebug) {
+    console.log(msg)
+  }
 }
 
 function logEntry(params) {
@@ -100,9 +104,14 @@ function logConsole(params) {
   }
 }
 
-function install(on, filter, options = {}) {
+function install(on, filter, options = {
+  logToOutput: true,
+  recordLogs: false
+}) {
   eventFilter = filter;
+  logToOutput = options.logToOutput;
   recordLogs = options.recordLogs;
+  
   on('before:browser:launch', browserLaunchHandler)
 }
 

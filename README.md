@@ -65,15 +65,40 @@ module.exports = (on, config) => {
 If you want to record the logs internally, you can use the `recordLogs` option:
 
 ```js
+const logToOutput = require('cypress-log-to-output');
+
 module.exports = (on, config) => {
   /** the rest of your plugins... **/
   const options = { recordLogs: true };
-  require('cypress-log-to-output').install(on, filterCallback, options)
+  logToOutput.install(on, filterCallback, options)
+
+  on('after:spec', () => {
+    const logs = logToOutput.getLogs();
+
+    // do something with the logs ...
+
+    logToOutput.clearLogs();
+  });  
 }
 ```
 
 The logs will be stored in an internal buffer. They can be accessed using the `getLogs` exported function. 
 The buffer can be cleared using the `clearLogs` exported function.
+
+## Disable logging to output
+
+If you don't want the logs to show up in the stdout, you can set
+the `logToOutput` option to `false`. This option can be used on its own, but mostly
+makes sense when `recordLogs` is `true`.
+
+```js
+module.exports = (on, config) => {
+  const options = { recordLogs: true, logToOutput: false };
+  require('cypress-log-to-output').install(on, filterCallback, options)
+}
+```
+
+Note that debug messages are not affected and must be disabled explicitly (see below).
 
 ## Disabling debug info
 
