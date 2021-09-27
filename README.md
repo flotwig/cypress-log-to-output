@@ -93,7 +93,7 @@ makes sense when `recordLogs` is `true`.
 
 ```js
 module.exports = (on, config) => {
-  const options = { recordLogs: true, logToOutput: true };
+  const options = { recordLogs: true, logToOutput: false };
   require('cypress-log-to-output').install(on, filterCallback, options)
 }
 ```
