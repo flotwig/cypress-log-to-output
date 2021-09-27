@@ -2,7 +2,7 @@ const CDP = require('chrome-remote-interface')
 const chalk = require('chalk')
 
 let eventFilter
-let logToOutput = true
+let logToOutput
 let recordLogs
 
 let messageLog = [];
@@ -109,10 +109,9 @@ function install(on, filter, options = {
   recordLogs: false
 }) {
   eventFilter = filter;
+  logToOutput = options.logToOutput;
   recordLogs = options.recordLogs;
-  if (options.logToOutput === false) {
-    logToStdout = false
-  }
+  
   on('before:browser:launch', browserLaunchHandler)
 }
 
