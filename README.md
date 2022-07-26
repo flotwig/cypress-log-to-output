@@ -1,5 +1,4 @@
-cypress-log-to-output
-===
+# cypress-log-to-output
 
 This is a [Cypress](https://github.com/cypress-io/cypress) plugin that sends all console logs that occur in the browser to stdout in the terminal. This means that you can see any kind of `console.log`, `console.info` or `console.error` that occurs in the browser, even if your tests are running in the terminal.
 
@@ -11,15 +10,36 @@ npm install --save-dev cypress-log-to-output
 
 # Usage
 
-In your `cypress/plugins/index.js`, add this to your `module.exports`:
+In your `cypress.config.{js,ts}`, add this to your config file:
 
 ```js
-module.exports = (on, config) => {
-  /** the rest of your plugins... **/
-  require('cypress-log-to-output').install(on)
-  // or, if there is already a before:browser:launch handler, use .browserLaunchHandler inside of it
-  // @see https://github.com/flotwig/cypress-log-to-output/issues/5
-}
+import * as logToOutput from 'cypress-log-to-output';
+
+export default defineConfig({
+  e2e: {
+    setupNodeEvents(on) {
+      logToOutput.install(on);
+      // or, if there is already a before:browser:launch handler, use .browserLaunchHandler inside of it
+-     // @see https://github.com/flotwig/cypress-log-to-output/issues/5
+    },
+  },
+});
+```
+
+or
+
+```js
+const { defineConfig } = require('cypress');
+
+module.exports = defineConfig({
+  // setupNodeEvents can be defined in either
+  // the e2e or component configuration
+  e2e: {
+    setupNodeEvents(on, config) {
+      require('cypress-log-to-output').install(on);
+    },
+  },
+});
 ```
 
 You'll now see all browser console logs in your terminal output.
@@ -39,25 +59,24 @@ Works in Chrome, Chromium, or Canary browsers during `cypress run` and `cypress 
 If you want to filter events, you can use a custom filtering callback:
 
 ```js
-module.exports = (on, config) => {
-  /** the rest of your plugins... **/
-  require('cypress-log-to-output').install(on, (type, event) => {
-    // return true or false from this plugin to control if the event is logged
-    // `type` is either `console` or `browser`
-    // if `type` is `browser`, `event` is an object of the type `LogEntry`:
-    //  https://chromedevtools.github.io/devtools-protocol/tot/Log#type-LogEntry
-    // if `type` is `console`, `event` is an object of the type passed to `Runtime.consoleAPICalled`:
-    //  https://chromedevtools.github.io/devtools-protocol/tot/Runtime#event-consoleAPICalled
+  setupNodeEvents(on, config) {
+    logToOutput.install(on, (type, event) => {
+      // return true or false from this plugin to control if the event is logged
+      // `type` is either `console` or `browser`
+      // if `type` is `browser`, `event` is an object of the type `LogEntry`:
+      //  https://chromedevtools.github.io/devtools-protocol/tot/Log#type-LogEntry
+      // if `type` is `console`, `event` is an object of the type passed to `Runtime.consoleAPICalled`:
+      //  https://chromedevtools.github.io/devtools-protocol/tot/Runtime#event-consoleAPICalled
 
-    // for example, to only show error events:
+      // for example, to only show error events:
 
-    if (event.level === 'error' || event.type === 'error') {
-      return true
-    }
+      if (event.level === 'error' || event.type === 'error') {
+        return true;
+      }
 
-    return false
-  })
-}
+      return false;
+    });
+  }
 ```
 
 ## Recording Logs
@@ -65,14 +84,13 @@ module.exports = (on, config) => {
 If you want to record the logs internally, you can use the `recordLogs` option:
 
 ```js
-module.exports = (on, config) => {
-  /** the rest of your plugins... **/
+setupNodeEvents(on, config) {
   const options = { recordLogs: true };
-  require('cypress-log-to-output').install(on, filterCallback, options)
-}
+  logToOutput.install(on, filterCallback, options);
+};
 ```
 
-The logs will be stored in an internal buffer. They can be accessed using the `getLogs` exported function. 
+The logs will be stored in an internal buffer. They can be accessed using the `getLogs` exported function.
 The buffer can be cleared using the `clearLogs` exported function.
 
 ## Disabling debug info
