@@ -166,6 +166,7 @@ function browserLaunchHandler(browser = {}, launchOptions) {
 
       cdp.on('disconnect', () => {
         debugLog('Chrome Debugging Protocol disconnected')
+        setTimeout(tryConnect, 100)
       })
     })
     .catch(() => {
